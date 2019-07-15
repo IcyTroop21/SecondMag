@@ -1,0 +1,520 @@
+body
+{
+	background-image: url("../img/bg.jpg");
+	margin:0px;
+  	font-family: Lato, sans-serif;
+  	font-weight: 700;
+}
+hr
+{
+    background-color: #bfbfbf;
+    border: 0 none;
+    color: #bfbfbf;
+    height: 1px;
+}
+textarea 
+{
+    width: 300px;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #b3b3b3;
+    border-radius: 5px;
+    font-size: 14px;
+    resize: none;
+    overflow: hidden;
+    height: 150px;
+}
+select
+{
+	font-family: Arial;
+	background: transparent;
+	border-radius: 5px;
+	border: 1px solid #b3b3b3;
+	font-size: 14px;
+	height: 29px;
+	padding: 5px;
+	width: 235px;
+}
+.bar
+{
+	min-width:900px;
+	background-color:#1a2a3a;
+	height: 80px;
+	width: 100%;
+	border-bottom:6px solid black;
+}
+.g-recaptcha
+{
+	display:inline-block;
+
+}
+.glide
+{
+	background-color: white;
+	border:1px solid lightgray;
+	border-radius: 2px;
+	height: 130px;
+	border-left:5px solid dodgerblue;
+}
+.clickable
+{
+	float:left;
+	color:black;
+	font-size:20px;
+	text-decoration:none;
+	margin:10px;
+}
+.clickable:hover
+{
+	color:dodgerblue;
+}
+.me
+{
+	color:gray;
+	font-size:15px;
+	text-decoration:none;
+}
+.me:hover
+{
+	color:dodgerblue;
+}
+.create
+{
+	border-top:6px solid dodgerblue;
+	border-bottom:6px solid dodgerblue;
+	margin: auto;
+	padding: 30px;
+	width: 450px;
+	background-color:white;
+	border-radius:6px;
+}
+.create input[type=text]
+{
+	padding: 6px;
+  	margin-top: 15px;
+  	font-size: 18px;
+  	width:50%;
+	border-radius:15px;
+	border:2px solid gray;
+}
+.create input[type=password]
+{
+	padding: 6px;
+  	margin-top: 15px;
+  	font-size: 18px;
+  	width:50%;
+	border-radius:15px;
+	border:2px solid gray;
+}
+.create input[type=email]
+{
+	padding: 6px;
+  	margin-top: 15px;
+  	font-size: 18px;
+  	width:50%;
+	border-radius:15px;
+	border:2px solid gray;
+}
+.post
+{
+	border-top:6px solid dodgerblue;
+	border-bottom:6px solid dodgerblue;
+	margin: auto;
+	padding: 30px;
+	background-color:white;
+	border-radius:6px;
+}
+.post input[type=text]
+{
+	padding: 6px;
+  	font-size: 14px;
+  	width:250px;
+	border-radius:5px;
+	border:1px solid #b3b3b3;
+}
+.button 
+{
+ 	padding: 6px 10px;
+  	margin-top: 15px;
+  	margin-right: 16px;
+ 	background-color: #555;
+ 	color: white;
+ 	font-size: 15px;
+ 	border: none;
+  	cursor: pointer;
+	border-radius:6px;
+	text-decoration:none;
+}
+.button:hover
+{
+  background-color: dodgerblue;
+}
+.addbutton 
+{
+ 	padding: 6px 10px;
+  	margin-top: 15px;
+  	margin-right: 16px;
+ 	background-color: dodgerblue;
+ 	color: white;
+ 	font-size: 15px;
+ 	border: none;
+  	cursor: pointer;
+	border-radius:6px;
+	text-decoration:none;
+}
+.addbutton:hover
+{
+  background-color: #5200cc;
+}
+button 
+{
+ 	padding: 6px 10px;
+  	margin-top: 15px;
+  	margin-right: 16px;
+	margin-left:5px;
+ 	background-color: #555;
+ 	color: white;
+ 	font-size: 15px;
+ 	border: none;
+  	cursor: pointer;
+	border-radius:6px;
+}
+button:hover
+{
+  background-color: dodgerblue;
+}
+.title
+{
+	margin: 0;
+    padding: 0;
+	font-size:25px;
+	text-align: center;
+}
+.cont
+{
+	text-decoration: none;
+	padding: 6px;
+	margin:15px; 
+	float:right;
+	color:white;
+	font-size: 20px;
+}
+.cont:hover
+{
+	color:dodgerblue;
+}
+.img-up > input
+{
+    display: none;
+}
+.couple
+{
+	display: flex;
+}
+.img-up
+{
+	width: 150px;
+	height: 125px;
+	background-image:url("../img/blankboi.jpg");
+	background-repeat: no-repeat;
+	background-size: cover;
+	position: relative;
+	margin: 5px;
+}
+.imgprev
+{
+	max-width:130px;
+	max-height:108px;
+	padding:7px;
+	margin: 0;
+	position: relative;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+.imgprevprim
+{
+	max-width:185px;
+	max-height:152px;
+	padding:7px;
+	margin: 0;
+	position: relative;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+.price
+{
+	border-right:4px solid dodgerblue;
+	border-left:4px solid dodgerblue;
+	border-top:1px solid lightgray;
+	border-bottom:1px solid lightgray;
+	margin-left:2px;
+	padding: 6px;
+	width: 170px;
+	background-color:white;
+	border-radius:3px;
+	text-align: center;
+	font-size: 22px;
+	float:left;
+}
+.phone
+{
+	border-right:4px solid dodgerblue;
+	border-left:4px solid dodgerblue;
+	border-top:1px solid lightgray;
+	border-bottom:1px solid lightgray;
+	padding: 6px;
+	margin-right:2px;
+	width: 170px;
+	background-color:white;
+	border-radius:3px;
+	text-align: center;
+	font-size: 22px;
+	float:right;
+}
+
+.boop {
+  float: left;
+  max-width: 20%;
+  height: 200px;
+}
+
+/* The Modal (background) */
+.modal {
+  display: none;
+  position: fixed;
+  padding-top: 30px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  position: relative;
+  margin: auto;
+  padding: 0;
+  width: 80%;
+  max-width: 1100px;
+  height: 65%;
+}
+.mySlides
+{
+	background: rgba(0, 0, 0, 0.7);
+	height: 100%;
+}
+
+/* The Close Button */
+.close {
+  color: white;
+  position: absolute;
+  top: 10px;
+  right: 25px;
+  font-size: 75px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #999;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+
+/* Next & previous buttons */
+.prev,
+.next {
+  cursor: pointer;
+  position:absolute;
+  top: 46%;
+  width: auto;
+  padding: 16px;
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  transition: 0.6s ease;
+  border-radius: 0 3px 3px 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+.prev:hover,
+.next:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.demo {
+  opacity: 0.6;
+}
+
+.active,
+.demo:hover {
+  opacity: 1;
+}
+.master
+{
+	border-bottom:6px solid dodgerblue;
+	margin: auto;
+	padding: 10px;
+	width: 850px;
+	background-color:white;
+	border-radius:6px;
+}
+.search
+{
+	color:#2d2d2d;
+	width: 270px;
+	text-align: center;
+	font-size: 20px;
+	padding-top: 5px;
+	padding-bottom: 3px;
+	margin:25px;
+	margin-right: 8px;
+	float:left;
+	border:none;
+	border-radius:15px;
+
+}
+.specify
+{
+	background-color:white;
+	height: 75px;
+	width: 1000px;
+	margin:auto;
+	margin-top:25px;
+	border-top:4px solid dodgerblue;
+	border-bottom:4px solid lightgray;
+	padding:15px;
+}
+.specify input[type=text]
+{
+	margin-top:20px;
+	border:1px solid lightgray;
+	text-align: center;
+	border-radius: 6px;
+	font-size: 20px;
+	padding-top: 5px;
+	padding-bottom: 3px;
+	width: 500px
+}
+.takeit
+{
+	border:1px solid lightgray;
+	height: 34px;
+	float:right;
+}
+.pajestatic
+{
+	color:white;
+	text-decoration:none;
+	height: 35px;
+	width: 35px;
+	border-radius: 5px;
+	padding:3px;
+	font-size: 25px;
+	background-color:#ff751a;
+	margin:5px;
+}
+.paje
+{
+	color:dodgerblue;
+	text-decoration:none;
+	height: 35px;
+	width: 35px;
+	border-radius: 5px;
+	padding:3px;
+	font-size: 25px;
+	margin:5px;
+}
+.paje:hover
+{
+	color:white;
+	background-color:#ff751a;
+}
+.drop
+{
+	float:right;
+	margin:25px;
+	display: inline-block;
+	font-size: 25px;
+}
+.drop:hover .dropcont
+{
+	display: block;
+}
+.thisone
+{
+	text-align: right;
+    color: white;
+    text-decoration: none;
+    display: block;
+}
+.thisone:hover
+{
+	color:dodgerblue;
+}
+.last
+{
+	color:dodgerblue;
+	text-decoration: none;
+}
+.last:hover
+{
+	color:#ff751a;
+}
+
+
+.dropcont
+{
+	padding:10px;
+	font-size: 15px;
+	display: none;
+    position: absolute;
+    background-color: white;
+    border-radius: 10px;
+    border:1px solid lightgray;
+}
+
+.profil
+{
+	font-size: 14px;
+	margin:auto;
+	margin-top:20px;
+	background-color: white;
+	border-radius: 15px;
+	padding:20px;
+	width: 900px;
+	overflow: hidden;
+}
+.detalii
+{
+	margin:auto;
+	background-color: white;
+	border-radius: 15px;
+	padding:20px;
+	width: 900px;
+	overflow: hidden;
+}
+
+.imgtext {
+	float:left;
+    text-align: center;
+    width: 60px;
+}
+
+.imgtext img {
+    display: block;
+    margin: 0 auto;
+}
+
+
+
