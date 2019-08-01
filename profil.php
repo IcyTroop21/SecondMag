@@ -157,7 +157,10 @@ include 'const.php';
             //check if it's mine
             if($gj && $posts[$i]->email==$_SESSION['email'])
                 $mine=true;
-            echo "<div class='glide'>";
+            if($mine)
+              echo "<div class='glide' style='border-left:5px solid #00ff00;'>";
+            else
+              echo "<div class='glide'>";
 
             echo "<a style='float:left; display:block; background-color:#e6e6e6; width:200px;height:130px' href='page.php?id=".$posts[$i]->id."'>
             <img style='position:relative; top: 50%; left: 50%; transform: translate(-50%, -50%); max-width:200px;max-height:130px' src='";
@@ -175,7 +178,7 @@ include 'const.php';
             echo " ".$posts[$i]->moneda." <img style='vertical-align: middle; width:35px;' src='img/money.png'/></a>";
             echo "<a class='clickable' href='page.php?id=".$posts[$i]->id."'>".$posts[$i]->titlu."</a>";
 
-            echo "<br><br><br><a style='float:left;margin:10px;margin-top:56px;font-size:15px; color:gray'><img style='vertical-align: middle;width:15px;' src='img/locatie.png'/>".$posts[$i]->localitate." &nbsp &nbsp <img style='vertical-align: middle; width:14px;' src='img/date.png'/>  ".substr($posts[$i]->data, 6, -6)."/".substr($posts[$i]->data, 4, -8)."/".substr($posts[$i]->data, 0, -10)." ".substr($posts[$i]->data, 8, -4).":".substr($posts[$i]->data, 10, -2)." &nbsp &nbsp <img style='vertical-align: middle; width:15px;' src='img/tag.png'/> ".$posts[$i]->categorie."</a><br>";
+            echo "<br><br><br><a style='float:left;margin:10px;margin-top:56px;font-size:15px; color:gray'><img style='vertical-align: middle;width:15px;' src='img/locatie.png'/>".$posts[$i]->judet." &nbsp &nbsp <img style='vertical-align: middle; width:14px;' src='img/date.png'/>  ".substr($posts[$i]->data, 6, -6)."/".substr($posts[$i]->data, 4, -8)."/".substr($posts[$i]->data, 0, -10)." ".substr($posts[$i]->data, 8, -4).":".substr($posts[$i]->data, 10, -2)." &nbsp &nbsp <img style='vertical-align: middle; width:15px;' src='img/tag.png'/> ".$posts[$i]->categorie."</a><br>";
 
             //Delete button
             if($mine)
@@ -187,6 +190,10 @@ include 'const.php';
                onclick="return  confirm('Sunteti sigur ca doriti sa stergeti acest anunt?')"
               <?php
               echo "type='image' src='img/delete.png' width='36px' height='36px'></form>";
+              
+              echo '<a href="edit.php?id='.$posts[$i]->id.'" style="float:right;margin-top:17px;margin-right:5px">';
+              echo '<img src="img/modify.png" style="height:30px; margin:3px"></a>';
+
               echo "<br><br><br>";
             }
             echo "</div><br>";
@@ -274,7 +281,11 @@ include 'const.php';
             //check if it's mine
             if($gj && $posts[$i]->email==$_SESSION['email'])
               $mine=true;
-            echo "<div class='glide'>";
+
+            if($mine)
+              echo "<div class='glide' style='border-left:5px solid #00ff00;'>";
+            else
+              echo "<div class='glide'>";
 
             echo "<a style='float:left; display:block; background-color:#e6e6e6; width:200px;height:130px' href='page.php?id=".$posts[$i]->id."'>
             <img style='position:relative; top: 50%; left: 50%; transform: translate(-50%, -50%); max-width:200px;max-height:130px' src='";
@@ -292,7 +303,7 @@ include 'const.php';
             echo " ".$posts[$i]->moneda." <img style='vertical-align: middle; width:35px;' src='img/money.png'/></a>";
             echo "<a class='clickable' href='page.php?id=".$posts[$i]->id."'>".$posts[$i]->titlu."</a>";
 
-            echo "<br><br><br><a style='float:left;margin:10px;margin-top:56px;font-size:15px; color:gray'><img style='vertical-align: middle;width:15px;' src='img/locatie.png'/>".$posts[$i]->localitate." &nbsp &nbsp <img style='vertical-align: middle; width:14px;' src='img/date.png'/>  ".substr($posts[$i]->data, 6, -6)."/".substr($posts[$i]->data, 4, -8)."/".substr($posts[$i]->data, 0, -10)." ".substr($posts[$i]->data, 8, -4).":".substr($posts[$i]->data, 10, -2)." &nbsp &nbsp <img style='vertical-align: middle; width:15px;' src='img/tag.png'/> ".$posts[$i]->categorie."</a><br>";
+            echo "<br><br><br><a style='float:left;margin:10px;margin-top:56px;font-size:15px; color:gray'><img style='vertical-align: middle;width:15px;' src='img/locatie.png'/>".$posts[$i]->judet." &nbsp &nbsp <img style='vertical-align: middle; width:14px;' src='img/date.png'/>  ".substr($posts[$i]->data, 6, -6)."/".substr($posts[$i]->data, 4, -8)."/".substr($posts[$i]->data, 0, -10)." ".substr($posts[$i]->data, 8, -4).":".substr($posts[$i]->data, 10, -2)." &nbsp &nbsp <img style='vertical-align: middle; width:15px;' src='img/tag.png'/> ".$posts[$i]->categorie."</a><br>";
 
             //Delete button
             if($mine)
@@ -303,7 +314,11 @@ include 'const.php';
               ?>
                onclick="return  confirm('Sunteti sigur ca doriti sa stergeti acest anunt?')"
               <?php
-              echo "type='image' src='img/delete.png' width='36px' height='36px'></form>";
+              echo "type='image' src='img/delete.png' height='31px' height='36px'></form>";
+
+              echo '<a href="edit.php?id='.$posts[$i]->id.'" style="float:right;margin-top:17px;margin-right:5px">';
+              echo '<img src="img/modify.png" style="height:30px; margin:3px"></a>';
+
               echo "<br><br><br>";
             }
 

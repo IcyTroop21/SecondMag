@@ -1,33 +1,72 @@
 <?php
 session_start();
+include 'const.php';
 if(!isset($_POST['login']) && isset($_SERVER['HTTP_REFERER']))
 $_SESSION['goback']=$_SERVER['HTTP_REFERER'];
-
 ?>
 
 <?php
+	//connection
+	$handler = new PDO('mysql:host=127.0.0.1;dbname=nameless','root','');
+	$handler ->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE,PDO::FETCH_OBJ);
+
+	if (!empty($_SERVER['HTTP_CLIENT_IP']))
+		$ip = $_SERVER['HTTP_CLIENT_IP'];
+	elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))
+		$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+	else
+		$ip = $_SERVER['REMOTE_ADDR'];
+
+	$sql='SELECT * FROM trying WHERE ip= :ip';
+	$stmt = $handler->prepare($sql);
+	$stmt -> execute(['ip' => $ip]);
+	$try = $stmt->fetch();
+	if(!isset($try->ip))
+	{
+		$sql = "INSERT INTO trying (ip,attempts) VALUES (:ip,:attempts)";
+		$query = $handler->prepare($sql);
+		$query->execute(['ip' => $ip ,'attempts'=> '0']);
+
+		$sql='SELECT * FROM trying WHERE ip= :ip';
+		$stmt = $handler->prepare($sql);
+		$stmt -> execute(['ip' => $ip]);
+		$try= $stmt->fetch();
+	}
+	if($try->attempts<=3)
+		$captcha=false;
+	else
+		$captcha=true;
+
+	if(!$captcha_state)
+		$captcha=false;
+
 	//check if login requested
 	if(isset($_POST['login']))
 	{
-		//reCaptcha
-		$secret="6Le67ocUAAAAAM1ls3fFJDCUGUAkBKaxWRsjNrd2";
-		$response = $_POST["g-recaptcha-response"];
-		$url="https://www.google.com/recaptcha/api/siteverify";
-		$data= array(
-			'secret' => '6Le67ocUAAAAAM1ls3fFJDCUGUAkBKaxWRsjNrd2',
-			'response' => $_POST["g-recaptcha-response"]
-		);
-		$options = array(
-			'http' => array(
-				'method' => 'POST',
-				'content' => http_build_query($data)
-			)
-		);
-		$context = stream_context_create($options);
-		$verify= file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
-		$captcha_success = json_decode($verify);
-		if($captcha_success -> success == false)
-		$captcha_error="Captcha incorect!";
+		
+
+  		if($captcha)
+  		{
+			//reCaptcha
+			$secret="6Le67ocUAAAAAM1ls3fFJDCUGUAkBKaxWRsjNrd2";
+			$response = $_POST["g-recaptcha-response"];
+			$url="https://www.google.com/recaptcha/api/siteverify";
+			$data= array(
+				'secret' => '6Le67ocUAAAAAM1ls3fFJDCUGUAkBKaxWRsjNrd2',
+				'response' => $_POST["g-recaptcha-response"]
+			);
+			$options = array(
+				'http' => array(
+					'method' => 'POST',
+					'content' => http_build_query($data)
+				)
+			);
+			$context = stream_context_create($options);
+			$verify= file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
+			$captcha_success = json_decode($verify);
+			if($captcha_success -> success == false)
+			$captcha_error="Captcha incorect!";
+		}
 
 		
 	  	//take the data
@@ -36,12 +75,8 @@ $_SESSION['goback']=$_SERVER['HTTP_REFERER'];
 
 
 	  	//Verify the data
-	  	if(empty($captcha_error))
+	  	if(!$captcha || ($captcha && empty($captcha_error)))
 	  	{
-	  		//connection
-	  		$handler = new PDO('mysql:host=127.0.0.1;dbname=nameless','root','');
-	  		$handler ->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE,PDO::FETCH_OBJ);
-
 	  		$sql='SELECT * FROM conturi WHERE email= :email';
 	  		$stmt = $handler->prepare($sql);
 	  		$stmt -> execute(['email' => $email]);
@@ -51,19 +86,49 @@ $_SESSION['goback']=$_SERVER['HTTP_REFERER'];
 	  			$hash = $post->psw;
 		  		if(password_verify($password,$hash))
 		  		{
-		  			$_SESSION['username']=$post->username;
-		  			$_SESSION['email']=$post->email;
-		  			$_SESSION['psw']=$password;
+		  			if($post->activated)
+		  			{
+			  			$sql="UPDATE trying SET attempts=:attempts WHERE ip=:ip";
+			  			$query = $handler->prepare($sql);
+			  			$query->execute(['attempts'=>'0','ip'=>$ip]);
 
-		  			if(isset($_SESSION['goback']))
-					header('Location: '.$_SESSION['goback']);
+			  			$_SESSION['username']=$post->username;
+			  			$_SESSION['email']=$post->email;
+			  			$_SESSION['psw']=$password;
+
+			  			if(isset($_SESSION['goback']))
+						header('Location: '.$_SESSION['goback']);
+						else
+						header('Location: mage.php');
+						exit;
+					}
 					else
-					header('Location: mage.php');
-					exit;
+					{
+						$_SESSION['premail']=$post->email;
+						$_SESSION['prepsw']=$password;
+
+						header('Location: verify.php');
+						exit;
+					}
 		  		}
 		  		else
-		  		$login_error="Email sau parola incorecta";
+		  		{
+		  			$sql="UPDATE trying SET attempts=:attempts WHERE ip=:ip";
+		  			$query = $handler->prepare($sql);
+		  			$query->execute(['attempts'=>$try->attempts++,'ip'=>$ip]);
+		  			$try->attempts++;
+		  			$login_error="Email sau parola incorecta";
+		  		}
 	  		}
+	  		else
+	  		{
+	  			$sql="UPDATE trying SET attempts=:attempts WHERE ip=:ip";
+	  			$query = $handler->prepare($sql);
+	  			$query->execute(['attempts'=>$try->attempts+1,'ip'=>$ip]);
+	  			$try->attempts++;
+	  			$login_error="Email sau parola incorecta";
+		  	}
+
 	  	}
 	}
 ?>
@@ -108,11 +173,14 @@ Logare
 	Parola : <input type="password" placeholder="Parola" name="password"><br>
 	<?php
 	if(isset($login_error))
-		echo '<a style="color:red">'.$login_error."<br></a>";
+		echo '<br><a style="color:red">'.$login_error."</a>";
 	?>
 	<br>
-	<div class="g-recaptcha" data-sitekey="6Le67ocUAAAAALuPMz9OZnqD6jEjHgxd2dADkmKR"></div>
-	<br>
+	<?php
+	if($captcha_state)
+	if($try->attempts>3)
+	echo '<br><div class="g-recaptcha" data-sitekey="6Le67ocUAAAAALuPMz9OZnqD6jEjHgxd2dADkmKR"></div><br>';
+	?>
 	<?php
 	if(isset($captcha_error))
 		echo '<a style="color:red">'.$captcha_error."<br></a>";
@@ -120,7 +188,6 @@ Logare
 	<button type="submit" value="submit" name="login">Login</button>
 	</form>
 	<a class="button" href="register.php" style="float:left;">Inregistrare</a>
-	<a class="button" href="mage.php" style="float:right;">Am uitat parola</a>
 
 	<br>
 	<br>
@@ -129,6 +196,10 @@ Logare
 
 
 </body>
-<script src='https://www.google.com/recaptcha/api.js'></script>
+<?php
+if($captcha_state)
+if($try->attempts>3)
+echo "<script src='https://www.google.com/recaptcha/api.js'></script>";
+?>
 </head>
 </html>

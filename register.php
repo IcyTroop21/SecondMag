@@ -1,5 +1,6 @@
 <?php
 session_start();
+include 'const.php';
 ?>
 <?php
 
@@ -35,25 +36,28 @@ if(isset($_POST['register']))
   	$password=htmlspecialchars($_POST['password']);
   	$password2=htmlspecialchars($_POST['password2']);
 
-	//reCaptcha
-	$secret="6Le67ocUAAAAAM1ls3fFJDCUGUAkBKaxWRsjNrd2";
-	$response = $_POST["g-recaptcha-response"];
-	$url="https://www.google.com/recaptcha/api/siteverify";
-	$data= array(
-		'secret' => '6Le67ocUAAAAAM1ls3fFJDCUGUAkBKaxWRsjNrd2',
-		'response' => $_POST["g-recaptcha-response"]
-	);
-	$options = array(
-		'http' => array(
-			'method' => 'POST',
-			'content' => http_build_query($data)
-		)
-	);
-	$context = stream_context_create($options);
-	$verify= file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
-	$captcha_success = json_decode($verify);
-	if($captcha_success -> success == false)
-	$captcha_error="Captcha incorect!";
+  	if($captcha_state)
+  	{
+		//reCaptcha
+		$secret="6Le67ocUAAAAAM1ls3fFJDCUGUAkBKaxWRsjNrd2";
+		$response = $_POST["g-recaptcha-response"];
+		$url="https://www.google.com/recaptcha/api/siteverify";
+		$data= array(
+			'secret' => '6Le67ocUAAAAAM1ls3fFJDCUGUAkBKaxWRsjNrd2',
+			'response' => $_POST["g-recaptcha-response"]
+		);
+		$options = array(
+			'http' => array(
+				'method' => 'POST',
+				'content' => http_build_query($data)
+			)
+		);
+		$context = stream_context_create($options);
+		$verify= file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
+		$captcha_success = json_decode($verify);
+		if($captcha_success -> success == false)
+		$captcha_error="Captcha incorect!";
+	}
 
 	//Username
 	if(empty($username))
@@ -103,15 +107,50 @@ if(isset($_POST['register']))
   	}
 
   	//Store the data
-  	if(empty($username_error) && empty($email_error) && empty($password_error) && empty($captcha_error))
+  	if(empty($username_error) && empty($email_error) && empty($password_error) && (empty($captcha_error) || !$captcha_state) )
   	{
-  		$sql = "INSERT INTO conturi (username,psw,email,lastpost,space) VALUES (:username,:psw,:email,:lastpost,:space)";
+  		$sql = "INSERT INTO conturi (username,psw,email,lastpost,space,activated) VALUES (:username,:psw,:email,:lastpost,:space,:activated)";
   		$query = $handler->prepare($sql);
 
-  		$query->execute(['username' => $username ,'psw'=> $psw,'email'=> $email,'lastpost'=> $time,'space'=> $time]);
+  		$query->execute(['username' => $username ,'psw'=> $psw,'email'=> $email,'lastpost'=> $time,'space'=> $time,'activated'=>!$verifymail]);
 
-  		header('Location: mage.php');
-  		exit;
+  		if($verifymail)
+  		{
+	  		$_SESSION['premail']=$email;
+			$_SESSION['prepsw']=$password;
+
+			$key = md5(microtime().rand());
+			$multi=password_hash($key, PASSWORD_BCRYPT);
+			$sql="UPDATE conturi set cheie=:cheie WHERE email=:email";
+			$query = $handler->prepare($sql);
+			$query->execute(['cheie'=>$multi,'email'=>$_SESSION['premail']]);
+
+			$reciever=$_SESSION['premail'];
+			$subject="Cheia de acces pentru contul tau SecondMag";
+			$body="Cheia ta de acces este ".$key."<br> Daca nu ai creat nici un cont, ignora acest mesaj.";
+			$nonhtml="Cheia ta de acces este ".$key." , Daca nu ai creat nici un cont, ignora acest mesaj.";
+
+			include 'respect.php';
+
+			if($mail_state=="Mail retrimis cu succes!")
+				$mail_state='Cheia necesara a fost trimisa la '.$_SESSION['premail'];
+			$_SESSION['takeit']=$mail_state;
+				
+
+
+	  		header('Location: verify.php');
+	  		exit;
+  		}
+  		else
+  		{
+	  		$_SESSION['email']=$email;
+	  		$_SESSION['username']=$username;
+			$_SESSION['psw']=$password;
+
+	  		header('Location: mage.php');
+	  		exit;
+  		}
+
   	}
 
 
@@ -173,8 +212,10 @@ Inregistrare
 		echo '<a style="color:red">'.$password_error."<br></a>";
 	?>
 	<br>
-	<div class="g-recaptcha" data-sitekey="6Le67ocUAAAAALuPMz9OZnqD6jEjHgxd2dADkmKR"></div>
-	<br>
+	<?php
+	if($captcha_state)
+		echo '<div class="g-recaptcha" data-sitekey="6Le67ocUAAAAALuPMz9OZnqD6jEjHgxd2dADkmKR"></div><br>';
+	?>
 	<br>
 	<?php
 	if(isset($captcha_error))
@@ -189,6 +230,9 @@ Inregistrare
 
 
 </body>
-<script src='https://www.google.com/recaptcha/api.js'></script>
+<?php
+if($captcha_state)
+	echo "<script src='https://www.google.com/recaptcha/api.js'></script>";
+?>
 </head>
 </html>

@@ -12,7 +12,7 @@ include 'const.php';
 <div class="bar">
 
 <a href="mage.php" style="float:left;">
-<img src="img/logo.png" style="height:75px; margin:3px">
+<img src="img/logo.png" alt='Pagina de acasa' style="height:75px; margin:3px">
 </a>
 
 <form method="GET" action="mage.php" autocomplete="off">
@@ -143,6 +143,58 @@ include 'const.php';
         <option value="Alta categorie">Alta categorie</option>
     </select>
 
+    <select class='takeit' name="judet" style="margin-top:20px; width:130px;">
+    <?php
+        if(isset($_GET['judet']))
+        echo '<option value="'.$_GET['judet'].'" hidden>'.$_GET['judet'].'</option>';
+        else
+        echo '<option value="Toata tara" hidden>Toata tara</option>';
+    ?>
+    <option value="Toata tara">Toata tara</option>
+    <option value="Alba">Alba</option>
+    <option value="Arad">Arad</option>
+    <option value="Arges">Arges</option>
+    <option value="Bacau">Bacau</option>
+    <option value="Bihor">Bihor</option>
+    <option value="Bistrita-Nasaud">Bistrita-Nasaud</option>
+    <option value="Botosani">Botosani</option>
+    <option value="Brasov">Brasov</option>
+    <option value="Braila">Braila</option>
+    <option value="Bucuresti">Bucuresti</option>
+    <option value="Buzau">Buzau</option>
+    <option value="Caras-Severin">Caras-Severin</option>
+    <option value="Calarasi">Calarasi</option>
+    <option value="Cluj">Cluj</option>
+    <option value="Constanta">Constanta</option>
+    <option value="Covasna">Covasna</option>
+    <option value="Dambovita">Dambovita</option>
+    <option value="Dolj">Dolj</option>
+    <option value="Galati">Galati</option>
+    <option value="Giurgiu">Giurgiu</option>
+    <option value="Gorj">Gorj</option>
+    <option value="Harghita">Harghita</option>
+    <option value="Hunedoara">Hunedoara</option>
+    <option value="Ialomnita">Ialomnita</option>
+    <option value="Iasi">Iasi</option>
+    <option value="Ilfov">Ilfov</option>
+    <option value="Maramures">Maramures</option>
+    <option value="Mehedinti">Mehedinti</option>
+    <option value="Mures">Mures</option>
+    <option value="Neamt">Neamt</option>
+    <option value="Olt">Olt</option>
+    <option value="Prahova">Prahova</option>
+    <option value="Satu Mare">Satu Mare</option>
+    <option value="Salaj">Salaj</option>
+    <option value="Sibiu">Sibiu</option>
+    <option value="Suceava">Suceava</option>
+    <option value="Teleorman">Teleorman</option>
+    <option value="Timis">Timis</option>
+    <option value="Tulcea">Tulcea</option>
+    <option value="Vaslui">Vaslui</option>
+    <option value="Valcea">Valcea</option>
+    <option value="Vrancea">Vrancea</option>    
+    </select>
+
 
 </form>
 
@@ -232,12 +284,26 @@ include 'const.php';
     if($_GET['categorie']!='Toate categoriile')
       $categorie=$_GET['categorie'];
 
+  $judet="";
+  if(isset($_GET['judet']))
+    if($_GET['judet']!='Toata tara')
+      $judet=$_GET['judet'];
+
+  $sql="SELECT * FROM postare WHERE titlu LIKE :search ";
+  if($judet)
+	  $sql.="AND judet= :judet ";
   if($categorie)
-	  $sql="SELECT * FROM postare WHERE titlu LIKE :search AND categorie= :categorie ORDER BY ".$ordonare;
-  else
-    $sql="SELECT * FROM postare WHERE titlu LIKE :search ORDER BY ".$ordonare;
+    $sql.="AND categorie= :categorie ";
+  $sql.="ORDER BY ".$ordonare;
+
+
 	$stmt = $handler->prepare($sql);
-  if($categorie)
+
+  if($categorie && $judet)
+    $stmt -> execute(['search' => $search, 'judet' => $judet, 'categorie' => $categorie]);
+  elseif($judet)
+    $stmt -> execute(['search' => $search, 'judet' => $judet]);
+  elseif($categorie)
     $stmt -> execute(['search' => $search, 'categorie' => $categorie]);
   else
     $stmt -> execute(['search' => $search]);
@@ -258,7 +324,10 @@ include 'const.php';
       if($posts[$i]->email==$_SESSION['email'])
           $mine=true;
 
-   		echo "<div class='glide'>";
+      if($mine)
+   		  echo "<div class='glide' style='border-left:5px solid #00ff00;'>";
+      else
+        echo "<div class='glide'>";
 
   		echo "<a style='float:left; display:block; background-color:#e6e6e6; width:200px;height:130px' href='page.php?id=".$posts[$i]->id."'>
   			<img style='position:relative; top: 50%; left: 50%; transform: translate(-50%, -50%); max-width:200px;max-height:130px' src='";
@@ -275,7 +344,7 @@ include 'const.php';
   		echo " ".$posts[$i]->moneda." <img style='vertical-align: middle; width:35px;' src='img/money.png'/></a>";
   		echo "<a class='clickable' href='page.php?id=".$posts[$i]->id."'>".$posts[$i]->titlu."</a>";
 
-  		echo "<br><br><br><a style='float:left;margin:10px;margin-top:56px;font-size:15px; color:gray'><img style='vertical-align: middle;width:15px;' src='img/locatie.png'/>".$posts[$i]->localitate." &nbsp &nbsp <img style='vertical-align: middle; width:14px;' src='img/date.png'/>  ".substr($posts[$i]->data, 6, -6)."/".substr($posts[$i]->data, 4, -8)."/".substr($posts[$i]->data, 0, -10)." ".substr($posts[$i]->data, 8, -4).":".substr($posts[$i]->data, 10, -2)." &nbsp &nbsp <img style='vertical-align: middle; width:15px;' src='img/tag.png'/> ".$posts[$i]->categorie."</a><br>";
+  		echo "<br><br><br><a style='float:left;margin:10px;margin-top:56px;font-size:15px; color:gray'><img style='vertical-align: middle;width:15px;' src='img/locatie.png'/>".$posts[$i]->judet." &nbsp &nbsp <img style='vertical-align: middle; width:14px;' src='img/date.png'/>  ".substr($posts[$i]->data, 6, -6)."/".substr($posts[$i]->data, 4, -8)."/".substr($posts[$i]->data, 0, -10)." ".substr($posts[$i]->data, 8, -4).":".substr($posts[$i]->data, 10, -2)." &nbsp &nbsp <img style='vertical-align: middle; width:15px;' src='img/tag.png'/> ".$posts[$i]->categorie."</a><br>";
 
       //Delete button
       if($mine)
@@ -286,7 +355,11 @@ include 'const.php';
         ?>
          onclick="return  confirm('Sunteti sigur ca doriti sa stergeti acest anunt?')"
         <?php
-        echo "type='image' src='img/delete.png' width='36px' height='36px'></form>";
+        echo "type='image' src='img/delete.png' height='31px' height='36px'></form>";
+
+        echo '<a href="edit.php?id='.$posts[$i]->id.'" style="float:right;margin-top:17px;margin-right:5px">';
+        echo '<img src="img/modify.png" style="height:30px; margin:3px"></a>';
+        
         echo "<br><br><br>";
       }
 
@@ -308,6 +381,9 @@ include 'const.php';
 
   if(isset($_GET['ordonare']))
     $ending=$ending."&ordonare=".$_GET['ordonare'];
+
+  if(isset($_GET['judet']))
+    $ending=$ending."&judet=".$_GET['judet'];
 
 ?>
 

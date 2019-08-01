@@ -184,7 +184,11 @@ include 'const.php';
     		?>
     		 onclick="return  confirm('Sunteti sigur ca doriti sa stergeti acest anunt?')"
     		<?php
-    		echo "type='image' src='img/delete.png' width='45px' height='45px'></form>";
+    		echo "type='image' src='img/delete.png' height='35px'></form>";
+
+    		echo '<a href="edit.php?id='.$post->id.'" style="float:right;">';
+        	echo '<img src="img/modify.png" style="height:30px; margin:5px"></a>';
+
     		echo "<br><br><br>";
     	}
 
@@ -195,7 +199,7 @@ include 'const.php';
     	echo "<img style='vertical-align: middle;float:right; width:39px; display: block;' src='img/phone.png'/><div class='phone'>".$post->telefon."</div><br><br><br><br>";
     	echo "<a style='font-size:23px'> ".$post->titlu."</a><br><br>";
 
-    	echo "<a style='font-size:15px; color:gray'><img style='vertical-align: middle;width:15px;' src='img/locatie.png'/>".$post->localitate." &nbsp &nbsp <img style='vertical-align: middle; width:14px;' src='img/date.png'/>  ".substr($post->data, 6, -6)."/".substr($post->data, 4, -8)."/".substr($post->data, 0, -10)." ".substr($post->data, 8, -4).":".substr($post->data, 10, -2)." &nbsp &nbsp <img style='vertical-align: middle; width:15px;' src='img/tag.png'/> ".$post->categorie."<br><br>";
+    	echo "<a style='font-size:15px; color:gray'><img style='vertical-align: middle;width:15px;' src='img/locatie.png'/>".$post->judet." &nbsp &nbsp <img style='vertical-align: middle; width:14px;' src='img/date.png'/>  ".substr($post->data, 6, -6)."/".substr($post->data, 4, -8)."/".substr($post->data, 0, -10)." ".substr($post->data, 8, -4).":".substr($post->data, 10, -2)." &nbsp &nbsp <img style='vertical-align: middle; width:15px;' src='img/tag.png'/> ".$post->categorie."<br><br>";
     	echo "Postat de </a>"."<a class='me' href='profil.php?e=".$post->email."'>".$post->username."</a>";
     	echo "<br><br>Descriere<hr><br>";
     	echo "<a style='color:#4d4d4d; font-size:15px;white-space:pre-wrap;'>".$post->descriere."</a><br><br><br>";
