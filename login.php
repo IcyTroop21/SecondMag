@@ -115,7 +115,7 @@ $_SESSION['goback']=$_SERVER['HTTP_REFERER'];
 		  		{
 		  			$sql="UPDATE trying SET attempts=:attempts WHERE ip=:ip";
 		  			$query = $handler->prepare($sql);
-		  			$query->execute(['attempts'=>$try->attempts++,'ip'=>$ip]);
+		  			$query->execute(['attempts'=>$try->attempts+1,'ip'=>$ip]);
 		  			$try->attempts++;
 		  			$login_error="Email sau parola incorecta";
 		  		}
